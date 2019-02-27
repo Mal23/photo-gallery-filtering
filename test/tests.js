@@ -1,16 +1,9 @@
 import './html-equal.js';
+import filteredImages from '../src/filtered-images.js';
 
 const test = QUnit.test;
 
 QUnit.module('image filters');
-
-function filteredImages(images, filter) {
-    return images.filter(image => {
-        const keyword = !filter.keyword || image.keyword === filter.keyword;
-        const horns = !filter.horns || image.horns >= filter.horns;
-        return keyword && horns;
-    });
-}
 
 const images = [
     { title: 'a thing', keyword: 'banana', horns: 2 },
@@ -37,5 +30,18 @@ test('filter images by number of horns and keyword', assert => {
     assert.deepEqual(filtered, [
         { title: 'a thing', keyword: 'banana', horns: 2 },
         { title: 'another thing', keyword: 'banana', horns: 5 }
+    ]);
+});
+
+test('if no keyword or horns entered, return all images', assert => {
+    //arrange
+    const filter = { keyword: '' };
+    //act
+    const filtered = filteredImages(images, filter);
+    //assert
+    assert.deepEqual(filtered, [
+        { title: 'a thing', keyword: 'banana', horns: 2 },
+        { title: 'another thing', keyword: 'banana', horns: 5 },
+        { title: 'a third thing', keyword: 'pineapple', horns: 1 }
     ]);
 });
